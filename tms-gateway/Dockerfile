@@ -13,5 +13,5 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 COPY --from=build /app/target/*.jar app.jar
 RUN chown appuser:appgroup app.jar
 USER appuser
-EXPOSE 8085
-ENTRYPOINT ["java", "-jar", "app.jar"]
+EXPOSE ${SERVER_PORT:-8085}
+ENTRYPOINT ["java", "-Dserver.port=${SERVER_PORT:-8085}", "-jar", "app.jar"]

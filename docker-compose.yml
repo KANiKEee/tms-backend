@@ -80,9 +80,11 @@ services:
       - "8085:8085"
     environment:
       SERVER_PORT: 8085
-      DATABASE_URL: jdbc:postgresql://postgres-gateway:5432/tms_gateway_db
-      DATABASE_USERNAME: postgres
-      DATABASE_PASSWORD: ${DB_PASSWORD:-000}
+      DB_HOST: postgres-gateway
+      DB_PORT: 5432
+      DB_NAME: tms_gateway_db
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD:-000}
       JWT_SECRET: ${JWT_SECRET:-TmsMiniSecretKeyForJwtTokenGeneration2024VeryLongSecureKey!!}
       JWT_EXPIRATION: 86400000
     depends_on:
@@ -99,9 +101,11 @@ services:
       - "8086:8086"
     environment:
       SERVER_PORT: 8086
-      DATABASE_URL: jdbc:postgresql://postgres-personnel:5432/tms_personnel_db
-      DATABASE_USERNAME: postgres
-      DATABASE_PASSWORD: ${DB_PASSWORD:-000}
+      DB_HOST: postgres-personnel
+      DB_PORT: 5432
+      DB_NAME: tms_personnel_db
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD:-000}
       JWT_SECRET: ${JWT_SECRET:-TmsMiniSecretKeyForJwtTokenGeneration2024VeryLongSecureKey!!}
     depends_on:
       postgres-personnel:
@@ -117,9 +121,11 @@ services:
       - "8087:8087"
     environment:
       SERVER_PORT: 8087
-      DATABASE_URL: jdbc:postgresql://postgres-camion:5432/tms_camion_db
-      DATABASE_USERNAME: postgres
-      DATABASE_PASSWORD: ${DB_PASSWORD:-000}
+      DB_HOST: postgres-camion
+      DB_PORT: 5432
+      DB_NAME: tms_camion_db
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD:-000}
       JWT_SECRET: ${JWT_SECRET:-TmsMiniSecretKeyForJwtTokenGeneration2024VeryLongSecureKey!!}
     depends_on:
       postgres-camion:
@@ -135,9 +141,11 @@ services:
       - "8088:8088"
     environment:
       SERVER_PORT: 8088
-      DATABASE_URL: jdbc:postgresql://postgres-mission:5432/tms_mission_db
-      DATABASE_USERNAME: postgres
-      DATABASE_PASSWORD: ${DB_PASSWORD:-000}
+      DB_HOST: postgres-mission
+      DB_PORT: 5432
+      DB_NAME: tms_mission_db
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD:-000}
       JWT_SECRET: ${JWT_SECRET:-TmsMiniSecretKeyForJwtTokenGeneration2024VeryLongSecureKey!!}
     depends_on:
       postgres-mission:

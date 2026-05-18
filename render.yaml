@@ -1,20 +1,20 @@
 databases:
-  - name: tms-gateway-db
+  - name: gateway-db
     plan: free
     databaseName: tms_gateway_db
     user: tms_user
 
-  - name: tms-personnel-db
+  - name: personnel-db
     plan: free
     databaseName: tms_personnel_db
     user: tms_user
 
-  - name: tms-camion-db
+  - name: camion-db
     plan: free
     databaseName: tms_camion_db
     user: tms_user
 
-  - name: tms-mission-db
+  - name: mission-db
     plan: free
     databaseName: tms_mission_db
     user: tms_user
@@ -29,27 +29,31 @@ services:
     dockerContext: ./tms-gateway
     envVars:
       - key: SERVER_PORT
-        value: 8085
-      - key: DATABASE_URL
+        value: 10000
+      - key: DB_HOST
         fromDatabase:
-          name: tms-gateway-db
-          property: connectionURI
-      - key: DATABASE_USERNAME
+          name: gateway-db
+          property: host
+      - key: DB_PORT
         fromDatabase:
-          name: tms-gateway-db
+          name: gateway-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: gateway-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: gateway-db
           property: user
-      - key: DATABASE_PASSWORD
+      - key: DB_PASSWORD
         fromDatabase:
-          name: tms-gateway-db
+          name: gateway-db
           property: password
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRATION
         value: 86400000
-      - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: tms-gateway-db
-          property: connectionURI
 
   # ==================== PERSONNEL ====================
   - type: web
@@ -60,25 +64,29 @@ services:
     dockerContext: ./tms-personnel
     envVars:
       - key: SERVER_PORT
-        value: 8086
-      - key: DATABASE_URL
+        value: 10000
+      - key: DB_HOST
         fromDatabase:
-          name: tms-personnel-db
-          property: connectionURI
-      - key: DATABASE_USERNAME
+          name: personnel-db
+          property: host
+      - key: DB_PORT
         fromDatabase:
-          name: tms-personnel-db
+          name: personnel-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: personnel-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: personnel-db
           property: user
-      - key: DATABASE_PASSWORD
+      - key: DB_PASSWORD
         fromDatabase:
-          name: tms-personnel-db
+          name: personnel-db
           property: password
       - key: JWT_SECRET
         generateValue: true
-      - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: tms-personnel-db
-          property: connectionURI
 
   # ==================== CAMION ====================
   - type: web
@@ -89,25 +97,29 @@ services:
     dockerContext: ./tms-camion
     envVars:
       - key: SERVER_PORT
-        value: 8087
-      - key: DATABASE_URL
+        value: 10000
+      - key: DB_HOST
         fromDatabase:
-          name: tms-camion-db
-          property: connectionURI
-      - key: DATABASE_USERNAME
+          name: camion-db
+          property: host
+      - key: DB_PORT
         fromDatabase:
-          name: tms-camion-db
+          name: camion-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: camion-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: camion-db
           property: user
-      - key: DATABASE_PASSWORD
+      - key: DB_PASSWORD
         fromDatabase:
-          name: tms-camion-db
+          name: camion-db
           property: password
       - key: JWT_SECRET
         generateValue: true
-      - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: tms-camion-db
-          property: connectionURI
 
   # ==================== MISSION ====================
   - type: web
@@ -118,22 +130,26 @@ services:
     dockerContext: ./tms-mission
     envVars:
       - key: SERVER_PORT
-        value: 8088
-      - key: DATABASE_URL
+        value: 10000
+      - key: DB_HOST
         fromDatabase:
-          name: tms-mission-db
-          property: connectionURI
-      - key: DATABASE_USERNAME
+          name: mission-db
+          property: host
+      - key: DB_PORT
         fromDatabase:
-          name: tms-mission-db
+          name: mission-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: mission-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: mission-db
           property: user
-      - key: DATABASE_PASSWORD
+      - key: DB_PASSWORD
         fromDatabase:
-          name: tms-mission-db
+          name: mission-db
           property: password
       - key: JWT_SECRET
         generateValue: true
-      - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: tms-mission-db
-          property: connectionURI
