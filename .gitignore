@@ -1,0 +1,24 @@
+# ============ Build & IDE ============
+**/target/
+**/.idea/
+**/*.iml
+**/.settings/
+**/.classpath
+**/.project
+**/.factorypath
+
+# ============ Environment ============
+.env
+*.env.local
+
+# ============ Docker ============
+**/docker-compose.override.yml
+
+# ============ OS ============
+Thumbs.db
+.DS_Store
+
+# ============ Maven ============
+**/.mvn/wrapper/maven-wrapper.jar
+**/mvnw
+**/mvnw.cmd

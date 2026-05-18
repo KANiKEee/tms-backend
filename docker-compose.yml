@@ -1,0 +1,151 @@
+version: '3.8'
+
+services:
+  # ==================== DATABASES ====================
+  postgres-gateway:
+    image: postgres:16-alpine
+    container_name: tms-postgres-gateway
+    environment:
+      POSTGRES_DB: tms_gateway_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-000}
+    volumes:
+      - pgdata-gateway:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-personnel:
+    image: postgres:16-alpine
+    container_name: tms-postgres-personnel
+    environment:
+      POSTGRES_DB: tms_personnel_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-000}
+    volumes:
+      - pgdata-personnel:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-camion:
+    image: postgres:16-alpine
+    container_name: tms-postgres-camion
+    environment:
+      POSTGRES_DB: tms_camion_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-000}
+    volumes:
+      - pgdata-camion:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-mission:
+    image: postgres:16-alpine
+    container_name: tms-postgres-mission
+    environment:
+      POSTGRES_DB: tms_mission_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-000}
+    volumes:
+      - pgdata-mission:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==================== MICROSERVICES ====================
+  tms-gateway:
+    build:
+      context: ./tms-gateway
+      dockerfile: Dockerfile
+    container_name: tms-gateway
+    ports:
+      - "8085:8085"
+    environment:
+      SERVER_PORT: 8085
+      DATABASE_URL: jdbc:postgresql://postgres-gateway:5432/tms_gateway_db
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-000}
+      JWT_SECRET: ${JWT_SECRET:-TmsMiniSecretKeyForJwtTokenGeneration2024VeryLongSecureKey!!}
+      JWT_EXPIRATION: 86400000
+    depends_on:
+      postgres-gateway:
+        condition: service_healthy
+    restart: unless-stopped
+
+  tms-personnel:
+    build:
+      context: ./tms-personnel
+      dockerfile: Dockerfile
+    container_name: tms-personnel
+    ports:
+      - "8086:8086"
+    environment:
+      SERVER_PORT: 8086
+      DATABASE_URL: jdbc:postgresql://postgres-personnel:5432/tms_personnel_db
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-000}
+      JWT_SECRET: ${JWT_SECRET:-TmsMiniSecretKeyForJwtTokenGeneration2024VeryLongSecureKey!!}
+    depends_on:
+      postgres-personnel:
+        condition: service_healthy
+    restart: unless-stopped
+
+  tms-camion:
+    build:
+      context: ./tms-camion
+      dockerfile: Dockerfile
+    container_name: tms-camion
+    ports:
+      - "8087:8087"
+    environment:
+      SERVER_PORT: 8087
+      DATABASE_URL: jdbc:postgresql://postgres-camion:5432/tms_camion_db
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-000}
+      JWT_SECRET: ${JWT_SECRET:-TmsMiniSecretKeyForJwtTokenGeneration2024VeryLongSecureKey!!}
+    depends_on:
+      postgres-camion:
+        condition: service_healthy
+    restart: unless-stopped
+
+  tms-mission:
+    build:
+      context: ./tms-mission
+      dockerfile: Dockerfile
+    container_name: tms-mission
+    ports:
+      - "8088:8088"
+    environment:
+      SERVER_PORT: 8088
+      DATABASE_URL: jdbc:postgresql://postgres-mission:5432/tms_mission_db
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: ${DB_PASSWORD:-000}
+      JWT_SECRET: ${JWT_SECRET:-TmsMiniSecretKeyForJwtTokenGeneration2024VeryLongSecureKey!!}
+    depends_on:
+      postgres-mission:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata-gateway:
+  pgdata-personnel:
+  pgdata-camion:
+  pgdata-mission:
