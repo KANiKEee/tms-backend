@@ -1,0 +1,139 @@
+databases:
+  - name: tms-gateway-db
+    plan: free
+    databaseName: tms_gateway_db
+    user: tms_user
+
+  - name: tms-personnel-db
+    plan: free
+    databaseName: tms_personnel_db
+    user: tms_user
+
+  - name: tms-camion-db
+    plan: free
+    databaseName: tms_camion_db
+    user: tms_user
+
+  - name: tms-mission-db
+    plan: free
+    databaseName: tms_mission_db
+    user: tms_user
+
+services:
+  # ==================== GATEWAY ====================
+  - type: web
+    name: tms-gateway
+    runtime: docker
+    plan: free
+    dockerfilePath: ./tms-gateway/Dockerfile
+    dockerContext: ./tms-gateway
+    envVars:
+      - key: SERVER_PORT
+        value: 8085
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tms-gateway-db
+          property: connectionURI
+      - key: DATABASE_USERNAME
+        fromDatabase:
+          name: tms-gateway-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: tms-gateway-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION
+        value: 86400000
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: tms-gateway-db
+          property: connectionURI
+
+  # ==================== PERSONNEL ====================
+  - type: web
+    name: tms-personnel
+    runtime: docker
+    plan: free
+    dockerfilePath: ./tms-personnel/Dockerfile
+    dockerContext: ./tms-personnel
+    envVars:
+      - key: SERVER_PORT
+        value: 8086
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tms-personnel-db
+          property: connectionURI
+      - key: DATABASE_USERNAME
+        fromDatabase:
+          name: tms-personnel-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: tms-personnel-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: tms-personnel-db
+          property: connectionURI
+
+  # ==================== CAMION ====================
+  - type: web
+    name: tms-camion
+    runtime: docker
+    plan: free
+    dockerfilePath: ./tms-camion/Dockerfile
+    dockerContext: ./tms-camion
+    envVars:
+      - key: SERVER_PORT
+        value: 8087
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tms-camion-db
+          property: connectionURI
+      - key: DATABASE_USERNAME
+        fromDatabase:
+          name: tms-camion-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: tms-camion-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: tms-camion-db
+          property: connectionURI
+
+  # ==================== MISSION ====================
+  - type: web
+    name: tms-mission
+    runtime: docker
+    plan: free
+    dockerfilePath: ./tms-mission/Dockerfile
+    dockerContext: ./tms-mission
+    envVars:
+      - key: SERVER_PORT
+        value: 8088
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tms-mission-db
+          property: connectionURI
+      - key: DATABASE_USERNAME
+        fromDatabase:
+          name: tms-mission-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: tms-mission-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: tms-mission-db
+          property: connectionURI

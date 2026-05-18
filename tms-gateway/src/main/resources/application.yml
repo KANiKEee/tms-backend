@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/tms_gateway_db}
+    url: ${JDBC_DATABASE_URL:${DATABASE_URL:jdbc:postgresql://localhost:5432/tms_gateway_db}}
     username: ${DATABASE_USERNAME:postgres}
     password: ${DATABASE_PASSWORD:000}
     driver-class-name: org.postgresql.Driver
