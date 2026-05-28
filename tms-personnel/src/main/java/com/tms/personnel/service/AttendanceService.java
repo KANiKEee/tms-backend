@@ -137,6 +137,12 @@ public class AttendanceService {
                 .collect(Collectors.toList());
     }
 
+    public List<CongeResponse> getCongesByPersonnel(Long personnelId) {
+        return congeRepository.findByPersonnelId(personnelId).stream()
+                .map(this::toCongeResponse)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void deleteConge(Long id) {
         congeRepository.deleteById(id);

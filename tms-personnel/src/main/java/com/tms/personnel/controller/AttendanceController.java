@@ -67,6 +67,18 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceService.getAllConges());
     }
 
+    // ═══ CONGÉ REQUESTS (accessible by any authenticated user) ═══
+    @GetMapping("/conges/personnel/{personnelId}")
+    public ResponseEntity<List<CongeResponse>> getCongesByPersonnel(@PathVariable Long personnelId) {
+        return ResponseEntity.ok(attendanceService.getCongesByPersonnel(personnelId));
+    }
+
+    @PostMapping("/conges/request")
+    public ResponseEntity<CongeResponse> requestConge(@RequestBody CongeRequest request) {
+        request.setStatut("EN_ATTENTE");
+        return ResponseEntity.status(HttpStatus.CREATED).body(attendanceService.createConge(request));
+    }
+
     @PutMapping("/conges/{id}/statut")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CongeResponse> updateCongeStatut(@PathVariable Long id, @RequestParam String statut) {
