@@ -17,7 +17,15 @@ public class UserSettingsService {
     private static final Set<String> THEMES = Set.of("light", "system", "dark");
     private static final Set<String> DENSITIES = Set.of("comfortable", "compact");
     private static final Set<String> LANGUAGES = Set.of("fr", "en");
-    private static final Set<String> START_PAGES = Set.of("/dashboard", "/missions", "/camions", "/my-space");
+    private static final Set<String> START_PAGES = Set.of(
+            "/dashboard",
+            "/missions",
+            "/camions",
+            "/my-space",
+            "/chat",
+            "/attendance",
+            "/parametres"
+    );
 
     private final UserSettingsRepository userSettingsRepository;
 
