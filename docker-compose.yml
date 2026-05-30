@@ -70,6 +70,23 @@ services:
       timeout: 5s
       retries: 5
 
+  postgres-warehouse:
+    image: postgres:16-alpine
+    container_name: tms-postgres-warehouse
+    environment:
+      POSTGRES_DB: tms_warehouse_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-000}
+    volumes:
+      - pgdata-warehouse:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # ==================== MICROSERVICES ====================
   tms-gateway:
     build:
@@ -152,8 +169,30 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  tms-warehouse:
+    build:
+      context: ./tms-warehouse
+      dockerfile: Dockerfile
+    container_name: tms-warehouse
+    ports:
+      - "8089:8089"
+    environment:
+      SERVER_PORT: 8089
+      DB_HOST: postgres-warehouse
+      DB_PORT: 5432
+      DB_NAME: tms_warehouse_db
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD:-000}
+      JWT_SECRET: ${JWT_SECRET:-TmsMiniSecretKeyForJwtTokenGeneration2024VeryLongSecureKey!!}
+    depends_on:
+      postgres-warehouse:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   pgdata-gateway:
   pgdata-personnel:
   pgdata-camion:
   pgdata-mission:
+  pgdata-warehouse:
+

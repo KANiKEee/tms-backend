@@ -19,6 +19,11 @@ databases:
     databaseName: tms_mission_db
     user: tms_user
 
+  - name: warehouse-db
+    plan: free
+    databaseName: tms_warehouse_db
+    user: tms_user
+
 services:
   # ==================== GATEWAY ====================
   - type: web
@@ -150,6 +155,39 @@ services:
       - key: DB_PASSWORD
         fromDatabase:
           name: mission-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+
+  # ==================== WAREHOUSE ====================
+  - type: web
+    name: tms-warehouse
+    runtime: docker
+    plan: free
+    dockerfilePath: ./tms-warehouse/Dockerfile
+    dockerContext: ./tms-warehouse
+    envVars:
+      - key: SERVER_PORT
+        value: 10000
+      - key: DB_HOST
+        fromDatabase:
+          name: warehouse-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: warehouse-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: warehouse-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: warehouse-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: warehouse-db
           property: password
       - key: JWT_SECRET
         generateValue: true
