@@ -26,7 +26,7 @@ public class PanneEntity implements Serializable {
     @Column(name = "camion_immatricule")
     private String camionImmatricule;
 
-    @Column(name = "chauffeur_id", nullable = false)
+    @Column(name = "chauffeur_id")
     private Long chauffeurId;
 
     @Column(name = "chauffeur_nom")
@@ -40,7 +40,7 @@ public class PanneEntity implements Serializable {
 
     @Column(name = "statut")
     @Builder.Default
-    private String statut = "DECLAREE"; // DECLAREE, EN_COURS, RESOLUE
+    private String statut = "DECLAREE"; // DECLAREE, APPROUVEE, EN_COURS, RESOLUE
 
     @Column(name = "resolution", length = 2000)
     private String resolution;

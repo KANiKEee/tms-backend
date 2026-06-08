@@ -21,6 +21,9 @@ public class CamionLocationEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "mission_id")
+    private Long missionId;
+
     @Column(name = "camion_id", nullable = false, unique = true)
     private Long camionId;
 
@@ -38,6 +41,9 @@ public class CamionLocationEntity implements Serializable {
 
     @Column(name = "longitude", nullable = false)
     private Double longitude;
+
+    @Column(name = "accuracy")
+    private Double accuracy;
 
     @Column(name = "speed")
     private Double speed; // km/h

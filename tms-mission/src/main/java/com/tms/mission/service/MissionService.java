@@ -18,13 +18,22 @@ public class MissionService {
 
     @Transactional
     public MissionResponse createMission(MissionRequest request) {
-        Double volumeTotal = null;
-        if (request.getColisNombre() != null && request.getColisHauteur() != null
+        if (request.getDateFin().isBefore(request.getDateDebut())) {
+            throw new IllegalArgumentException("La date de fin doit etre posterieure ou egale a la date de debut");
+        }
+
+        Double volumeTotal = request.getVolumeTotal();
+        if (request.getColisNombre() != null && request.getProduitVolumeUnitaire() != null) {
+            volumeTotal = request.getColisNombre() * request.getProduitVolumeUnitaire();
+        } else if (request.getColisNombre() != null && request.getColisHauteur() != null
                 && request.getColisLargeur() != null && request.getColisLongueur() != null) {
             volumeTotal = request.getColisNombre() * request.getColisHauteur()
                     * request.getColisLargeur() * request.getColisLongueur();
-        } else if (request.getVolumeTotal() != null) {
-            volumeTotal = request.getVolumeTotal();
+        }
+
+        Double poidsTotal = request.getPoidsTotal();
+        if (request.getColisNombre() != null && request.getProduitPoidsUnitaire() != null) {
+            poidsTotal = request.getColisNombre() * request.getProduitPoidsUnitaire();
         }
 
         MissionEntity entity = MissionEntity.builder()
@@ -44,7 +53,18 @@ public class MissionService {
                 .colisLargeur(request.getColisLargeur())
                 .colisLongueur(request.getColisLongueur())
                 .volumeTotal(volumeTotal)
-                .statut(request.getStatut() != null ? request.getStatut() : "PLANIFIEE")
+                .produitId(request.getProduitId())
+                .produitReference(request.getProduitReference())
+                .produitNom(request.getProduitNom())
+                .produitUnite(request.getProduitUnite())
+                .produitVolumeUnitaire(request.getProduitVolumeUnitaire())
+                .produitPoidsUnitaire(request.getProduitPoidsUnitaire())
+                .poidsTotal(poidsTotal)
+                .stockZoneId(request.getStockZoneId())
+                .stockZoneNom(request.getStockZoneNom())
+                .stockEntrepotId(request.getStockEntrepotId())
+                .stockEntrepotNom(request.getStockEntrepotNom())
+                .statut("EN_ATTENTE")
                 .build();
         return toResponse(missionRepository.save(entity));
     }
@@ -80,6 +100,32 @@ public class MissionService {
         missionRepository.deleteById(id);
     }
 
+    @Transactional
+    public MissionResponse startMission(Long id) {
+        MissionEntity entity = findMission(id);
+        if (!"EN_ATTENTE".equals(entity.getStatut())
+                && !"PLANIFIEE".equals(entity.getStatut())) {
+            throw new IllegalStateException("Seule une mission en attente peut etre demarree");
+        }
+        entity.setStatut("EN_COURS");
+        return toResponse(missionRepository.save(entity));
+    }
+
+    @Transactional
+    public MissionResponse completeMission(Long id) {
+        MissionEntity entity = findMission(id);
+        if (!"EN_COURS".equals(entity.getStatut())) {
+            throw new IllegalStateException("La mission doit etre demarree avant d etre terminee");
+        }
+        entity.setStatut("TERMINEE");
+        return toResponse(missionRepository.save(entity));
+    }
+
+    private MissionEntity findMission(Long id) {
+        return missionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mission non trouvee"));
+    }
+
     private MissionResponse toResponse(MissionEntity e) {
         return MissionResponse.builder()
                 .id(e.getId())
@@ -99,6 +145,17 @@ public class MissionService {
                 .colisLargeur(e.getColisLargeur())
                 .colisLongueur(e.getColisLongueur())
                 .volumeTotal(e.getVolumeTotal())
+                .produitId(e.getProduitId())
+                .produitReference(e.getProduitReference())
+                .produitNom(e.getProduitNom())
+                .produitUnite(e.getProduitUnite())
+                .produitVolumeUnitaire(e.getProduitVolumeUnitaire())
+                .produitPoidsUnitaire(e.getProduitPoidsUnitaire())
+                .poidsTotal(e.getPoidsTotal())
+                .stockZoneId(e.getStockZoneId())
+                .stockZoneNom(e.getStockZoneNom())
+                .stockEntrepotId(e.getStockEntrepotId())
+                .stockEntrepotNom(e.getStockEntrepotNom())
                 .statut(e.getStatut())
                 .createdAt(e.getCreatedAt())
                 .updatedAt(e.getUpdatedAt())

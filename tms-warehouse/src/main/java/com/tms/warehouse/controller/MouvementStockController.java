@@ -4,6 +4,7 @@ import com.tms.warehouse.dto.DashboardWarehouseResponse;
 import com.tms.warehouse.dto.MouvementRequest;
 import com.tms.warehouse.dto.MouvementResponse;
 import com.tms.warehouse.service.MouvementStockService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class MouvementStockController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<MouvementResponse> create(@RequestBody MouvementRequest request) {
+    public ResponseEntity<MouvementResponse> create(@Valid @RequestBody MouvementRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(mouvementService.createMouvement(request));
     }
 

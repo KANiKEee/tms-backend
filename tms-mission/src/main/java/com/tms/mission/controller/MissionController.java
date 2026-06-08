@@ -2,6 +2,7 @@ package com.tms.mission.controller;
 
 import com.tms.mission.dto.*;
 import com.tms.mission.service.MissionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class MissionController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<MissionResponse> createMission(@RequestBody MissionRequest request) {
+    public ResponseEntity<MissionResponse> createMission(@Valid @RequestBody MissionRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(missionService.createMission(request));
     }
 
@@ -45,12 +46,18 @@ public class MissionController {
     }
 
     /**
-     * Chauffeur-accessible: approve/start a mission after AI + GPS verification.
+     * Start a waiting mission after GPS, photo and AI verification in the mobile app.
      */
+    @PutMapping("/{id}/start")
+    @PreAuthorize("hasAnyRole('ADMIN','CHAUFFEUR')")
+    public ResponseEntity<MissionResponse> startMission(@PathVariable Long id) {
+        return ResponseEntity.ok(missionService.startMission(id));
+    }
+
     @PutMapping("/{id}/approve")
     @PreAuthorize("hasAnyRole('ADMIN','CHAUFFEUR')")
-    public ResponseEntity<MissionResponse> approveMission(@PathVariable Long id) {
-        return ResponseEntity.ok(missionService.updateMissionStatut(id, "EN_COURS"));
+    public ResponseEntity<MissionResponse> approveMissionCompatibility(@PathVariable Long id) {
+        return ResponseEntity.ok(missionService.startMission(id));
     }
 
     /**
@@ -59,7 +66,7 @@ public class MissionController {
     @PutMapping("/{id}/complete")
     @PreAuthorize("hasAnyRole('ADMIN','CHAUFFEUR')")
     public ResponseEntity<MissionResponse> completeMission(@PathVariable Long id) {
-        return ResponseEntity.ok(missionService.updateMissionStatut(id, "TERMINEE"));
+        return ResponseEntity.ok(missionService.completeMission(id));
     }
 
     @DeleteMapping("/{id}")

@@ -14,6 +14,8 @@ public interface MouvementStockRepository extends JpaRepository<MouvementStockEn
 
     List<MouvementStockEntity> findByMissionId(Long missionId);
 
+    boolean existsByMissionIdAndProduitIdAndType(Long missionId, Long produitId, String type);
+
     List<MouvementStockEntity> findByType(String type);
 
     List<MouvementStockEntity> findByDateHeureAfter(LocalDateTime dateTime);

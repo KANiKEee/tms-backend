@@ -68,9 +68,42 @@ public class MissionEntity implements Serializable {
     @Column(name = "volume_total")
     private Double volumeTotal;
 
+    @Column(name = "produit_id")
+    private Long produitId;
+
+    @Column(name = "produit_reference")
+    private String produitReference;
+
+    @Column(name = "produit_nom")
+    private String produitNom;
+
+    @Column(name = "produit_unite")
+    private String produitUnite;
+
+    @Column(name = "produit_volume_unitaire")
+    private Double produitVolumeUnitaire;
+
+    @Column(name = "produit_poids_unitaire")
+    private Double produitPoidsUnitaire;
+
+    @Column(name = "poids_total")
+    private Double poidsTotal;
+
+    @Column(name = "stock_zone_id")
+    private Long stockZoneId;
+
+    @Column(name = "stock_zone_nom")
+    private String stockZoneNom;
+
+    @Column(name = "stock_entrepot_id")
+    private Long stockEntrepotId;
+
+    @Column(name = "stock_entrepot_nom")
+    private String stockEntrepotNom;
+
     @Column(name = "statut")
     @Builder.Default
-    private String statut = "PLANIFIEE";
+    private String statut = "EN_ATTENTE";
 
     @Builder.Default
     @Column(name = "created_at", updatable = false)

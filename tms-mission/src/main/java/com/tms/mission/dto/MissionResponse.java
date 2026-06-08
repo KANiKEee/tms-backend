@@ -28,6 +28,17 @@ public class MissionResponse {
     private Double colisLargeur;
     private Double colisLongueur;
     private Double volumeTotal;
+    private Long produitId;
+    private String produitReference;
+    private String produitNom;
+    private String produitUnite;
+    private Double produitVolumeUnitaire;
+    private Double produitPoidsUnitaire;
+    private Double poidsTotal;
+    private Long stockZoneId;
+    private String stockZoneNom;
+    private Long stockEntrepotId;
+    private String stockEntrepotNom;
     private String statut;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -30,6 +30,13 @@ public class MouvementStockService {
     public MouvementResponse createMouvement(MouvementRequest request) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
+        if (request.getMissionId() != null
+                && "SORTIE".equals(request.getType())
+                && mouvementRepository.existsByMissionIdAndProduitIdAndType(
+                        request.getMissionId(), request.getProduitId(), request.getType())) {
+            throw new RuntimeException("Une sortie de stock existe deja pour ce produit et cette mission");
+        }
+
         // Validate product and zone exist
         produitRepository.findById(request.getProduitId())
                 .orElseThrow(() -> new RuntimeException("Produit non trouvé avec l'ID: " + request.getProduitId()));

@@ -21,7 +21,6 @@ public class UserSettingsService {
             "/dashboard",
             "/missions",
             "/camions",
-            "/my-space",
             "/chat",
             "/attendance",
             "/parametres"

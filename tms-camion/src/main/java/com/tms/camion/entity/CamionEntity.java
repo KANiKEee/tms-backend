@@ -53,7 +53,7 @@ public class CamionEntity implements Serializable {
 
     @Column(name = "statut")
     @Builder.Default
-    private String statut = "DISPONIBLE"; // DISPONIBLE, EN_MISSION, EN_MAINTENANCE, HORS_SERVICE
+    private String statut = "DISPONIBLE"; // DISPONIBLE, EN_MISSION, EN_PANNE, EN_MAINTENANCE, HORS_SERVICE
 
     @Column(name = "date_achat")
     private LocalDate dateAchat;

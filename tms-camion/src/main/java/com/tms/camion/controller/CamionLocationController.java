@@ -3,8 +3,10 @@ package com.tms.camion.controller;
 import com.tms.camion.dto.LocationResponse;
 import com.tms.camion.dto.LocationUpdateRequest;
 import com.tms.camion.service.CamionLocationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,24 +20,27 @@ public class CamionLocationController {
 
     /**
      * Receive a GPS location update from the chauffeur mobile app.
-     */
+    */
     @PostMapping
-    public ResponseEntity<LocationResponse> updateLocation(@RequestBody LocationUpdateRequest request) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'CHAUFFEUR')")
+    public ResponseEntity<LocationResponse> updateLocation(@Valid @RequestBody LocationUpdateRequest request) {
         return ResponseEntity.ok(locationService.updateLocation(request));
     }
 
     /**
      * Get the latest known location for all camions (for the admin tracking map).
-     */
+    */
     @GetMapping("/latest")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<LocationResponse>> getLatestLocations() {
         return ResponseEntity.ok(locationService.getAllLatestLocations());
     }
 
     /**
      * Get the latest location for a specific camion.
-     */
+    */
     @GetMapping("/{camionId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LocationResponse> getLocationByCamionId(@PathVariable Long camionId) {
         return ResponseEntity.ok(locationService.getLocationByCamionId(camionId));
     }
