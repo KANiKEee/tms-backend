@@ -3,7 +3,6 @@ package com.tms.gateway.service;
 import com.tms.gateway.config.JwtUtil;
 import com.tms.gateway.dto.request.CreateUserRequest;
 import com.tms.gateway.dto.request.LoginRequest;
-import com.tms.gateway.dto.request.RegisterRequest;
 import com.tms.gateway.dto.response.AuthResponse;
 import com.tms.gateway.dto.response.UserResponse;
 import com.tms.gateway.entity.User;
@@ -27,39 +26,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponse register(RegisterRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Le nom d'utilisateur existe déjà");
-        }
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("L'email existe déjà");
-        }
 
-        Role role;
-        try {
-            role = request.getRole() != null ? Role.valueOf(request.getRole().toUpperCase()) : Role.CHAUFFEUR;
-        } catch (IllegalArgumentException e) {
-            role = Role.CHAUFFEUR;
-        }
-
-        User user = User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(role)
-                .build();
-
-        userRepository.save(user);
-        String token = jwtUtil.generateToken(user);
-
-        return AuthResponse.builder()
-                .token(token)
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .role(user.getRole().name())
-                .personnelId(user.getPersonnelId())
-                .build();
-    }
 
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(

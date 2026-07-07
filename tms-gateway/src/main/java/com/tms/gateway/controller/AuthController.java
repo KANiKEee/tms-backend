@@ -1,7 +1,6 @@
 package com.tms.gateway.controller;
 
 import com.tms.gateway.dto.request.LoginRequest;
-import com.tms.gateway.dto.request.RegisterRequest;
 import com.tms.gateway.dto.response.AuthResponse;
 import com.tms.gateway.entity.User;
 import com.tms.gateway.service.AuthService;
@@ -19,11 +18,6 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
-
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
-    }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
